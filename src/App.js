@@ -13,30 +13,52 @@ class App extends React.Component {
     admin: true,
     cities: ['Madrid', 'Granada', 'Sevilla', 'Barcelona', 'Lugo'],
     alignment: 'center',
+
     changeAlignment: () => {
       this.state.alignment === 'center' 
         ? this.setState({alignment: 'left'}) 
         : this.setState({alignment: 'center'})
       },
+
     pets: [
       {animal: 'dog', name: 'Maya'},
       {animal: 'dog', name: 'Jordi'},
       {animal: 'cat', name: 'Misifu'},
       {animal: 'horse', name: 'Firulais'}
     ],
-    deletePet: (_name)=>{
-      const newPets = this.state.pets.filter((pet)=>{
-        return pet.name !== _name
-      })
-      this.setState({pets: newPets})
-    },
-    addPet: (_pet) => {
 
-      // this.setState({pets: [{animal: 'dog', name: _pet}, ...this.state.pets]})
-      
+    deletePet: (index)=>{
+      // const newPets = this.state.pets.filter((pet)=>{
+      //   return pet.name !== _name
+      // })
+      // this.setState({pets: newPets})
       const copyOfPets = [...this.state.pets]
-      copyOfPets.unshift({animal: 'dog', name: _pet})
+      copyOfPets.splice(index, 1)
       this.setState({pets: copyOfPets})
+    },
+
+    addPet: (event) => {
+
+      event.preventDefault()
+      const copyOfPets = [...this.state.pets]
+      copyOfPets.unshift(this.state.temporalNewAnimal)
+      this.setState({pets: copyOfPets})
+      
+    },
+
+    temporalNewAnimal: {animal: '', name: ''},
+
+    updateAnimals: (_name, _value) => {
+
+      const copyOfTemporalNewAnimal = {...this.state.temporalNewAnimal}
+
+      if(_name === 'animal'){
+        copyOfTemporalNewAnimal.animal = _value
+      } else if(_name === 'name'){
+        copyOfTemporalNewAnimal.name = _value
+      }
+
+      this.setState({temporalNewAnimal: copyOfTemporalNewAnimal})
     }
   }
 
@@ -74,7 +96,13 @@ class App extends React.Component {
           changeAlignment={this.state.changeAlignment}
         />
 
-        <Pets pets={this.state.pets} deletePet={this.state.deletePet} addPet={this.state.addPet}/>
+        <Pets 
+          pets={this.state.pets} 
+          deletePet={this.state.deletePet} 
+          addPet={this.state.addPet}
+          temporalNewAnimal={this.state.temporalNewAnimal}
+          updateAnimals={this.state.updateAnimals}
+        />
 
       </div>
     );    
